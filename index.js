@@ -58,17 +58,42 @@ app.get("/singleart/:id", async (req, res) => {
 
 // create signup data
 app.post("/api/signupdata", async (req, res) => {
-  try {
-    const newSignup = {
-      username: req.body.username,
+  let count = await signupModel
+    .find({
       email: req.body.email,
-      password: req.body.password,
-    };
-    const signupData = new signupModel(newSignup);
-    await signupData.save();
-    return res
-      .status(200)
-      .json({ success: true, message: "Thank You! For signing up" });
+    })
+    .countDocuments();
+  let countusername = await signupModel
+    .find({
+      username: req.body.username,
+    })
+    .countDocuments();
+
+  try {
+    if (count < 1) {
+      if (countusername < 1) {
+        const newSignup = {
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
+        };
+        const signupData = new signupModel(newSignup);
+        await signupData.save();
+        return res
+          .status(200)
+          .json({ success: true, message: "Thank You! For signing up" });
+      } else {
+        return res.json({
+          success: true,
+          message: "Username  exist",
+        });
+      }
+    } else {
+      return res.json({
+        success: true,
+        message: "You already have an account.Please Login",
+      });
+    }
   } catch (error) {
     return res.status(400).json({
       success: false,
