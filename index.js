@@ -102,6 +102,51 @@ app.post("/api/signupdata", async (req, res) => {
   }
 });
 
+//Login
+app.get("/login/:username", async (req, res) => {
+  try {
+    let userdata = await signupModel.findOne({ username: req.params.username });
+    return res.status(200).json({ success: true, data: userdata });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+//Delete
+app.delete("/deleteart/:id", async (req, res) => {
+  try {
+    let delArt = await artistModel.findByIdAndDelete(req.params.id);
+    return res.json({
+      success: true,
+      message: "Artwork deleted",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+//Update
+
+app.put("/updateart/:id/:arttheme/:arttitle/:artdescription",async(req,res)=>{
+  try {
+    const update=await artistModel.findByIdAndUpdate(req.params.id,{
+      arttheme:req.params.arttheme,
+      arttitle:req.params.arttitle,
+      artdescription:req.params.artdescription
+    })
+    return res.status.json({success:true,message:"Updated Successfully"})
+  } catch (error) {
+    return res.status(400).json({
+      success:false,error:error.message,
+    });
+  }
+})
+
 connectDatabase();
 const PORT = 5000;
 app.listen(PORT, async () => {
