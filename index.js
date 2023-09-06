@@ -5,6 +5,7 @@ const upload = multer({ dest: "uploads/" });
 const artistModel = require("./models/artistdata");
 const { connectDatabase } = require("./connection/file");
 const signupModel = require("./models/signup");
+const path = require("path");
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
@@ -132,23 +133,42 @@ app.delete("/deleteart/:id", async (req, res) => {
 
 //Update
 
-app.put("/updateart/:id/:arttheme/:arttitle/:artdescription",async(req,res)=>{
-  try {
-    const update=await artistModel.findByIdAndUpdate(req.params.id,{
-      arttheme:req.params.arttheme,
-      arttitle:req.params.arttitle,
-      artdescription:req.params.artdescription
-    })
-    return res.status.json({success:true,message:"Updated Successfully"})
-  } catch (error) {
-    return res.status(400).json({
-      success:false,error:error.message,
-    });
+app.put(
+  "/updateart/:id/:arttheme/:arttitle/:artdescription",
+  async (req, res) => {
+    try {
+      const update = await artistModel.findByIdAndUpdate(req.params.id, {
+        arttheme: req.params.arttheme,
+        arttitle: req.params.arttitle,
+        artdescription: req.params.artdescription,
+      });
+      return res
+        .status(200)
+        .json({ success: true, message: "Updated Successfully" });
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
   }
-})
+);
 
 connectDatabase();
-const PORT = 5000;
+// const PORT = 5000;
+const PORT = process.env.PORT || 5000; //Making port dynamic
+
+app.use(express.static("client/build"));
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.resolve(__dirname + "/client/build/index.html"),
+    function (err) {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+});
 app.listen(PORT, async () => {
   await console.log(`Server is running at port ${PORT}`);
 });

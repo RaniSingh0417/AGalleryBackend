@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e3512a00.css",
+    "main.js": "/static/js/main.bc15eb52.js",
+    "static/media/artlogo2.png": "/static/media/artlogo2.febf30d735bde33764fe.png",
+    "static/media/carasoul3.jpg": "/static/media/carasoul3.fed0dd86f0f492fb65bb.jpg",
+    "static/media/carasoul4.avif": "/static/media/carasoul4.4143ea71c315d585a6f0.avif",
+    "static/media/carasoul2.jpg": "/static/media/carasoul2.7b925f2134ef57a9e55d.jpg",
+    "index.html": "/index.html",
+    "main.e3512a00.css.map": "/static/css/main.e3512a00.css.map",
+    "main.bc15eb52.js.map": "/static/js/main.bc15eb52.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e3512a00.css",
+    "static/js/main.bc15eb52.js"
+  ]
+}
