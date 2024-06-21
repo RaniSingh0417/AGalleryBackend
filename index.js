@@ -27,7 +27,7 @@ app.post(
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         email: req.body.email,
-        artwork: result.url,
+        artwork: result.secure_url,
         arttheme: req.body.arttheme,
         arttitle: req.body.arttitle,
         artdescription: req.body.artdescription,
