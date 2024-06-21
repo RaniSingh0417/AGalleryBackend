@@ -1,25 +1,32 @@
 const express = require("express");
 const app = express();
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const bodyParser = require("body-parser");
+require("dotenv").config();
+const cloudinary = require("cloudinary");
+const path = require("path");
+const upload = require("./handlers/multer");
+require("./handlers/cloudinary");
 const artistModel = require("./models/artistdata");
 const { connectDatabase } = require("./connection/file");
 const signupModel = require("./models/signup");
-const path = require("path");
+
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+app.use(bodyParser.json()).use(bodyParser.urlencoded({ extended: true }));
+// app.use("/uploads", express.static("uploads"));
 
 app.post(
   "/api/createartistdata",
   upload.single("artwork"),
   async (req, res) => {
-    console.log(req.body, req.file, req.file.path);
+    // console.log(req.body, req.file);
+    const result = await cloudinary.v2.uploader.upload(req.file.path);
+    console.log(result);
     try {
       const newObject = {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         email: req.body.email,
-        artwork: req.file.path,
+        artwork: result.url,
         arttheme: req.body.arttheme,
         arttitle: req.body.arttitle,
         artdescription: req.body.artdescription,
@@ -30,7 +37,7 @@ app.post(
         .status(200)
         .json({ success: true, message: "Data saved succefully" });
     } catch (error) {
-      return res.status(401).json({ success: false, error: error.message });
+      return res.status(405).json({ success: false, error: error.message });
     }
   }
 );
@@ -42,7 +49,7 @@ app.get("/getartistdata", async (req, res) => {
     const artistdata = await artistModel.find().sort({ createdAt: -1 });
     return res.status(200).json({ success: true, data: artistdata });
   } catch (error) {
-    return res.status(401).json({ success: false, error: error.message });
+    return res.status(405).json({ success: false, error: error.message });
   }
 });
 // read single data of art gallery
@@ -53,7 +60,7 @@ app.get("/singleart/:id", async (req, res) => {
     console.log(singleartdata);
     return res.status(200).json({ success: true, data: singleartdata });
   } catch (error) {
-    returnres.status(401).json({ success: false, error: error.message });
+    return res.status(401).json({ success: false, error: error.message });
   }
 });
 
