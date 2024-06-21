@@ -19,9 +19,10 @@ app.post(
   upload.single("artwork"),
   async (req, res) => {
     // console.log(req.body, req.file);
-    const result = await cloudinary.v2.uploader.upload(req.file.path);
-    console.log(result);
     try {
+      const result = await cloudinary.v2.uploader.upload(req.file.path);
+      console.log(result);
+
       const newObject = {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
