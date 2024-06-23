@@ -21,7 +21,7 @@ app.post(
     // console.log(req.body, req.file);
     try {
       const result = await cloudinary.v2.uploader.upload(req.file.path);
-      console.log(result);
+      // console.log(result);
 
       const newObject = {
         firstname: req.body.firstname,
