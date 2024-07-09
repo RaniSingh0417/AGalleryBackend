@@ -181,6 +181,25 @@ app.get("/singleart/:id", async (req, res) => {
 });
 
 
+// for display of delete button and edit button
+app.get("/display/:id", checkIfUserLoggedIn,async(req,res)=>{
+  try {
+    const singleartdata = await artistModel.findById(req.params.id);
+    const userid = req.userid;
+    const userdetails = await signupModel.findOne(
+      { _id: userid },
+      { email: 1 }
+    );
+    if(userdetails.email===singleartdata.email){
+      return res.status(200).json({success:true,message:"Done"});
+    }
+  } catch (error) {
+    return res.status(401).json({success:false,error:error.message});
+  }
+
+});
+
+
 
 //Delete
 app.delete("/deleteart/:id", async (req, res) => {
