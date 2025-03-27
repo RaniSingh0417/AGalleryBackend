@@ -199,6 +199,38 @@ app.get("/display/:id", checkIfUserLoggedIn,async(req,res)=>{
 
 });
 
+// handle like
+
+// Express.js API Route for Liking an Artwork
+app.post("/likeart/:id",checkIfUserLoggedIn, async (req, res) => {
+  try {
+    const userId = req.userid; // Ensure user is logged in
+    const artwork = await artistModel.findById(req.params.id);
+
+    // if (!artwork) {
+    //   return res.status(404).json({ success: false, message: "Artwork not found" });
+    // }
+
+    // Toggle like
+    if (artwork.likedBy.includes(userId)) {
+      // Unlike
+      artwork.likes -= 1;
+      artwork.likedBy = artwork.likedBy.filter((id) => id.toString() !== userId);
+    } else {
+      // Like
+      artwork.likes += 1;
+      artwork.likedBy.push(userId);
+    }
+
+    await artwork.save();
+    res.json({ success: true, likes: artwork.likes, likedBy: artwork.likedBy });
+  } catch (error) {
+    console.error("Error liking artwork:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+
 
 
 //Delete
